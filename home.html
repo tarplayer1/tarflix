@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TarFlix</title>
+  <style>
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      background-color: #111;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: white;
+    }
+    
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7) 10%, transparent);
+      padding: 20px 4%;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: background-color 0.4s;
+    }
+    
+    .navbar.scrolled {
+      background-color: #141414;
+    }
+    
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #e50914;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .nav-links li {
+      cursor: pointer;
+      transition: color 0.3s;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .nav-links li:hover {
+      color: #e50914;
+    }
+    
+    /* Banner */
+    .banner {
+      background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.8) 100%), url("asset/banner.png");
+      background-size: cover;
+      background-position: center center;
+      height: 70vh;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 4%;
+      position: relative;
+      margin-bottom: -120px;
+    }
+    
+    .banner::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 7.4rem;
+      background-image: linear-gradient(180deg, transparent, rgba(37,37,37,0.61), #141414);
+    }
+    
+    .banner-content {
+      max-width: 600px;
+      z-index: 1;
+      margin-top: 100px;
+    }
+    
+    .banner-content h1 {
+      font-size: 3rem;
+      margin: 0 0 1rem;
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.45);
+    }
+    
+    .banner-content p {
+      font-size: 1.2rem;
+      margin: 0 0 1.5rem;
+      line-height: 1.4;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.45);
+    }
+    
+    .banner-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .banner-buttons button {
+      border: none;
+      padding: 8px 24px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 1rem;
+    }
+    
+    .banner-buttons .play-btn {
+      background-color: white;
+      color: black;
+    }
+    
+    .banner-buttons .play-btn:hover {
+      background-color: rgba(255,255,255,0.75);
+    }
+    
+    .banner-buttons .info-btn {
+      background-color: rgba(109,109,110,0.7);
+      color: white;
+    }
+    
+    .banner-buttons .info-btn:hover {
+      background-color: rgba(109,109,110,0.4);
+    }
+    
+    /* Movie Rows */
+    .movie-row {
+      padding: 0 4% 20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .movie-row h2 {
+      font-size: 1.4rem;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+    
+    .row-posters {
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      padding: 10px 0;
+      scroll-behavior: smooth;
+    }
+    
+    .row-posters::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .row-container {
+      position: relative;
+    }
+    
+    .row-container:hover .row-nav {
+      opacity: 1;
+    }
+    
+    .row-nav {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50px;
+      background: rgba(0,0,0,0.6);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .row-nav.left {
+      left: 0;
+    }
+    
+    .row-nav.right {
+      right: 0;
+    }
+    
+    .row-nav:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    
+    .row-item {
+      position: relative;
+      flex: 0 0 auto;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    
+    .row-item:hover {
+      transform: scale(1.1);
+      z-index: 5;
+    }
+    
+    .row-item:hover .item-info {
+      opacity: 1;
+    }
+    
+    .row-item img {
+      width: 220px;
+      height: 125px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .item-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      padding: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .item-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .item-meta {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #aaa;
+    }
+    
+    .item-meta span {
+      margin-right: 10px;
+    }
+    
+    .item-meta .match {
+      color: #46d369;
+      font-weight: bold;
+    }
+    
+    .item-meta .type {
+      padding: 2px 4px;
+      background-color: rgba(109,109,110,0.4);
+      border-radius: 2px;
+    }
+    
+    .continue-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: rgba(109,109,110,0.4);
+    }
+    
+    .continue-progress-bar {
+      height: 100%;
+      background-color: #e50914;
+    }
+    
+    /* Footer */
+    .footer {
+      padding: 50px 15% 10px;
+      background-color: #141414;
+      font-size: 14px;
+      color: #777;
+    }
+    
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .footer-links a {
+      color: #777;
+      text-decoration: none;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .footer-copyright {
+      font-size: 12px;
+    }
+    
+    /* Pages */
+    .page {
+      display: none;
+      padding: 100px 4% 20px;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    /* Detail Modal */
+    .detail-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+    
+    .detail-modal.active {
+      display: flex;
+    }
+    
+    .detail-container {
+      width: 90%;
+      max-width: 900px;
+      background-color: #141414;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .detail-backdrop {
+      width: 100%;
+      height: 400px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .detail-backdrop::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 150px;
+      background-image: linear-gradient(to bottom, transparent, #141414);
+    }
+    
+    .detail-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .detail-content {
+      padding: 20px;
+      margin-top: -100px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .detail-poster {
+      width: 200px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 4px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    
+    .detail-header {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .detail-info {
+      flex: 1;
+    }
+    
+    .detail-title {
+      font-size: 2rem;
+      margin: 0 0 10px;
+    }
+    
+    .detail-meta {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+    
+    .detail-match {
+      color: #46d369;
+      font-weight: bold;
+    }
+    
+    .detail-year {
+      color: #aaa;
+    }
+    
+    .detail-rating {
+      padding: 2px 4px;
+      background-color: rgba(109,109,110,0.4);
+      border-radius: 2px;
+    }
+    
+    .detail-type {
+      padding: 2px 4px;
+      background-color: #e50914;
+      border-radius: 2px;
+      font-weight: bold;
+    }
+    
+    .detail-description {
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .detail-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .detail-actions button {
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .detail-play {
+      background-color: white;
+      color: black;
+    }
+    
+    .detail-play:hover {
+      background-color: rgba(255,255,255,0.8);
+    }
+    
+    .detail-add {
+      background-color: rgba(109,109,110,0.7);
+      color: white;
+    }
+    
+    .detail-add:hover {
+      background-color: rgba(109,109,110,0.4);
+    }
+    
+    .detail-like {
+      background-color: rgba(109,109,110,0.7);
+      color: white;
+    }
+    
+    .detail-like.liked {
+      background-color: #e50914;
+    }
+    
+    .episodes-container {
+      margin-top: 30px;
+    }
+    
+    .episodes-title {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+    
+    .episode {
+      display: flex;
+      gap: 15px;
+      padding: 15px;
+      background-color: #2a2a2a;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .episode:hover {
+      background-color: #3a3a3a;
+    }
+    
+    .episode-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #aaa;
+      min-width: 40px;
+    }
+    
+    .episode-thumbnail {
+      width: 160px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .episode-info {
+      flex: 1;
+    }
+    
+    .episode-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .episode-description {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+    
+    .episode-duration {
+      font-size: 0.8rem;
+      color: #777;
+    }
+    
+    /* Video Player Modal */
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .video-modal.active {
+      display: flex;
+    }
+    
+    .video-container {
+      width: 90%;
+      max-width: 1200px;
+      position: relative;
+      height: 80vh;
+    }
+    
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+    }
+    
+    .video-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    
+    /* Message Modal */
+    .message-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 4000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .message-modal.active {
+      display: flex;
+    }
+    
+    .message-content {
+      background-color: #222;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+    }
+    
+    .message-content h2 {
+      color: #e50914;
+      margin-bottom: 20px;
+    }
+    
+    .message-content p {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    
+    .skip-message {
+      margin-top: 20px;
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .skip-message:hover {
+      color: white;
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5000;
+    }
+    
+    .spinner.active {
+      display: block;
+    }
+    
+    /* Type badges */
+    .type-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(0,0,0,0.7);
+      color: white;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: bold;
+      z-index: 1;
+    }
+    
+    .type-movie {
+      background-color: #e50914;
+    }
+    
+    .type-show {
+      background-color: #46d369;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .banner-content h1 {
+        font-size: 2rem;
+      }
+      
+      .banner-content p {
+        font-size: 1rem;
+      }
+      
+      .row-item img {
+        width: 160px;
+        height: 90px;
+      }
+      
+      .footer-links {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .detail-header {
+        flex-direction: column;
+      }
+      
+      .detail-poster {
+        width: 150px;
+        height: 225px;
+      }
+      
+      .detail-backdrop {
+        height: 300px;
+      }
+      
+      .episode {
+        flex-direction: column;
+      }
+      
+      .episode-thumbnail {
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">TARFLIX</div>
+    <nav>
+      <ul class="nav-links">
+        <li data-page="home">Home</li>
+        <li data-page="tv-shows">TV Shows</li>
+        <li data-page="movies">Movies</li>
+        <li data-page="new-popular">New & Popular</li>
+        <li data-page="my-list">My List</li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="banner">
+    <div class="banner-content">
+      <h1>Jurassic Park</h1>
+      <p>A 1993 science fiction film about a theme park populated with cloned dinosaurs on a remote island</p>
+      <div class="banner-buttons">
+        <button class="play-btn" id="play-featured">▶ Play</button>
+        <button class="info-btn" id="info-featured">ℹ More Info</button>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="page active" id="home">
+      <div class="movie-row">
+        <h2>Continue Watching</h2>
+        <div class="row-container">
+          <div class="row-posters" id="continue-watching"></div>
+        </div>
+      </div>
+      <div class="movie-row">
+        <h2>Trending Now</h2>
+        <div class="row-container">
+          <div class="row-posters" id="trending"></div>
+        </div>
+      </div>
+      <div class="movie-row">
+        <h2>Top Picks For You</h2>
+        <div class="row-container">
+          <div class="row-posters" id="top-picks"></div>
+        </div>
+      </div>
+      <div class="movie-row">
+        <h2>Popular on TarFlix</h2>
+        <div class="row-container">
+          <div class="row-posters" id="popular"></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="page" id="tv-shows">
+      <div class="movie-row">
+        <h2>TV Shows</h2>
+        <div class="row-container">
+          <div class="row-posters" id="tv-shows-row"></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="page" id="movies">
+      <div class="movie-row">
+        <h2>Movies</h2>
+        <div class="row-container">
+          <div class="row-posters" id="movies-row"></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="page" id="new-popular">
+      <div class="movie-row">
+        <h2>New Releases</h2>
+        <div class="row-container">
+          <div class="row-posters" id="new-releases"></div>
+        </div>
+      </div>
+      <div class="movie-row">
+        <h2>Popular</h2>
+        <div class="row-container">
+          <div class="row-posters" id="popular-releases"></div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="page" id="my-list">
+      <div class="movie-row">
+        <h2>My List</h2>
+        <div class="row-container">
+          <div class="row-posters" id="my-list-row"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">
+    <div class="footer-links">
+      <div>
+        <a href="#">Audio Description</a><br>
+        <a href="#">Help Center</a><br>
+        <a href="#">Gift Cards</a><br>
+        <a href="#">Media Center</a>
+      </div>
+      <div>
+        <a href="#">Investor Relations</a><br>
+        <a href="#">Jobs</a><br>
+        <a href="#">Terms of Use</a><br>
+        <a href="#">Corporate Information</a>
+      </div>
+      <div>
+        <a href="#">Privacy</a><br>
+        <a href="#">Legal Notices</a><br>
+        <a href="#">Cookie Preferences</a>
+      </div>
+      <div>
+        <a href="#">Contact Us</a><br>
+        <a href="#">Speed Test</a><br>
+        <a href="#">Only on TarFlix</a>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <p>© 2025 TarFlix, Inc.</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="detail-modal" id="detailModal">
+    <div class="detail-container">
+      <div class="detail-backdrop" id="detailBackdrop"></div>
+      <button class="detail-close" id="detailClose">&times;</button>
+      <div class="detail-content">
+        <div class="detail-header">
+          <img class="detail-poster" id="detailPoster" src="" alt="Poster">
+          <div class="detail-info">
+            <h1 class="detail-title" id="detailTitle">Title</h1>
+            <div class="detail-meta">
+              <span class="detail-match" id="detailMatch">98% Match</span>
+              <span class="detail-year" id="detailYear">2023</span>
+              <span class="detail-rating" id="detailRating">PG-13</span>
+              <span class="detail-type" id="detailType">MOVIE</span>
+            </div>
+            <p class="detail-description" id="detailDescription">Description goes here.</p>
+            <div class="detail-actions">
+              <button class="detail-play" id="detailPlay">▶ Play</button>
+              <button class="detail-add" id="detailAdd">+ My List</button>
+              <button class="detail-like" id="detailLike">👍 Like</button>
+            </div>
+          </div>
+        </div>
+        <div class="episodes-container" id="episodesContainer">
+          <!-- Episodes will be populated here for shows -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Player Modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-container">
+      <button class="video-close" id="videoClose">&times;</button>
+      <iframe id="moviePlayer" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- Message Modal -->
+  <div class="message-modal" id="messageModal">
+    <div class="message-content">
+      <h2>Thanks for using TarFlix!</h2>
+      <p>Follow <a href="https://github.com/tarplayer1" target="_blank" style="color: #e50914;">tarplayer1</a> on GitHub for more movies and shows</p>
+      <p>Special thanks to Internet Archive for making this possible</p>
+      <button class="skip-message" id="skipMessage">Skip (5s)</button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="spinner" id="spinner">
+    <svg width="50" height="50" viewBox="0 0 50 50">
+      <circle cx="25" cy="25" r="20" fill="none" stroke="#e50914" stroke-width="4" stroke-dasharray="31.415, 31.415" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </div>
+
+  <script>
+    // Enhanced movie data with type (movie/show), episodes, and other metadata
+    const movies = [
+      {
+        id: 1,
+        title: "Jurassic Park",
+        description: "A 1993 science fiction film about a theme park populated with cloned dinosaurs on a remote island",
+        poster: "asset/jp.png",
+        backdrop: "asset/banner.png",
+        video: "http://dn720408.ca.archive.org/0/items/movies_20220526/Jurassic.Park.1993.720p.BrRip.264.YIFY.mp4",
+        duration: 7200, // 2 hours in seconds
+        type: "movie",
+        year: 1993,
+        rating: "PG-13",
+        match: 98,
+        seasons: null
+      },
+      {
+        id: 2,
+        title: "SpongeBob SquarePants",
+        description: "The misadventures of a talking sea sponge who works at a fast food restaurant, attends a boating school, and lives in an underwater pineapple.",
+        poster: "asset/st.png",
+        backdrop: "asset/st-backdrop.png",
+        video: "https://ia803108.us.archive.org/13/items/dvdmenu_spongebob_first100episodes/bandicam%202019-07-20%2021-07-43-408.mp4",
+        duration: 3600,
+        type: "show",
+        year: 1999,
+        rating: "TV-Y7",
+        match: 95,
+        seasons: 15,
+        episodes: [
+          {
+            id: 201,
+            title: "Help Wanted / Reef Blower / Tea at the Treedome",
+            description: "SpongeBob gets a job at the Krusty Krab, shows off his reef blowing skills, and meets Sandy Cheeks.",
+            duration: 1429,
+            thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
+            video: "https://ia804603.us.archive.org/12/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%201%20Help%20Wanted%20%E2%80%93%20Reef%20Blower%20%E2%80%93%20Tea%20at%20the%20Treedome%20-%20SpongeBob%20SquarePants.mp4"
+          },
+          {
+            id: 202,
+            title: "Ripped Pants / Bubblestand",
+            description: "SpongeBob rips his pants to get attention, then opens a bubble-blowing stand.",
+            duration: 1380,
+            thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
+            video: "https://dn721600.ca.archive.org/0/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%202%20%20%E2%80%93%20Ripped%20Pants%20-%20SpongeBob%20SquarePants.mp4"
+          },
+          {
+            id: 203,
+            title: "Jellyfishing / Plankton!",
+            description: "SpongeBob and Patrick go jellyfishing, and Plankton tries to steal the Krabby Patty formula.",
+            duration: 1410,
+            thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
+            video: "https://dn721600.ca.archive.org/0/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%203%20Jellyfishing%20-%20SpongeBob%20SquarePants.mp4"
+          },
+          {
+            id: 204,
+            title: "Naughty Nautical Neighbors / Boating School",
+            description: "SpongeBob and Patrick become enemies then friends, and SpongeBob struggles with boating school.",
+            duration: 1395,
+            thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
+            video: "https://dn721600.ca.archive.org/0/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%204%20Naughty%20Nautical%20Neighbors%20%E2%80%93%20Boating%20School%20-%20SpongeBob%20SquarePants.mp4"
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "The Iron Giant",
+        description: "A boy befriends a giant robot from outer space",
+        poster: "asset/ig.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEL5sdZUBPx1XwtoDfijLpQaRuPPrWgMr6lg&s",
+        video: "https://dn721601.ca.archive.org/0/items/the-iron-giant_202402/TheIronGiant.mp4",
+        duration: 5160, // 1.43 hours
+        type: "movie",
+        year: 1999,
+        rating: "PG",
+        match: 92,
+        seasons: null
+      },
+      {
+        id: 5,
+        title: "The Lego Batman Movie",
+        description: "The Caped Crusader teams up with others to save Gotham City",
+        poster: "asset/lb.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR34BYW7pry5S_RmnvhPuuWwpwCi4XMiJAUaQ&s",
+        video: "https://dn721908.ca.archive.org/0/items/aqq_20240331/aqq.mp4",
+        duration: 6240, // 1.73 hours
+        type: "movie",
+        year: 2017,
+        rating: "PG",
+        match: 90,
+        seasons: null
+      },
+      {
+        id: 7,
+        title: "Croods: A New Age",
+        description: "The prehistoric Croods family faces its biggest challenge yet: another family called the Bettermans.",
+        poster: "asset/cna.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0JPGCTYWiHrOq3cCKkYcaEKZBZbU4QfGUw&s",
+        video: "https://ia802304.us.archive.org/14/items/hexziasmovies/The%20Croods%20A%20New%20Age.mp4",
+        duration: 5580, // 1.55 hours
+        type: "movie",
+        year: 2020,
+        rating: "PG",
+        match: 88,
+        seasons: null
+      },
+      {
+        id: 8,
+        title: "Paulie",
+        description: "A talking parrot's incredible journey to find his original owner",
+        poster: "asset/p.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2BEDVdXaJwYnEC-vKwniwC-0ROD21cgnvog&s",
+        video: "https://dn720405.ca.archive.org/0/items/1080-2_202204/1080%20%282%29.mp4",
+        duration: 5460, // 1.52 hours
+        type: "movie",
+        year: 1998,
+        rating: "PG",
+        match: 85,
+        seasons: null
+      },
+      {
+        id: 9,
+        title: "The SpongeBob Movie",
+        description: "The first SpongeBob SquarePants movie adventure",
+        poster: "asset/sbm.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuIV2mYNmYw2KxHCODd4Kvu-GmLSDZ2BwJSQ&s",
+        video: "https://dn721803.ca.archive.org/0/items/the-sponge-bob-square-pants-movie_202206/The%20SpongeBob%20SquarePants%20Movie.mp4",
+        duration: 5220, // 1.45 hours
+        type: "movie",
+        year: 2004,
+        rating: "PG",
+        match: 87,
+        seasons: null
+      },
+      {
+        id: 10,
+        title: "Mario Movie",
+        description: "A plumber's adventure in the Mushroom Kingdom",
+        poster: "asset/sm.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp2X45DAJ87t0FA0-Qdxw9ukw7r34LZg-tYg&s",
+        video: "https://dn720304.ca.archive.org/0/items/super.-mario.-bros.-2023.-full-1080-p-dual-lat/Super.Mario.Bros.2023.FULL1080P-Dual-Lat.mp4",
+        duration: 5220, // 1.45 hours
+        type: "movie",
+        year: 2023,
+        rating: "PG",
+        match: 95,
+        seasons: null
+      },
+    ];
+
+    // Current movie and tracking variables
+    let currentMovie = null;
+    let currentEpisode = null;
+    let currentTimeInterval;
+    let messageTimeout;
+
+    // DOM Elements
+    const detailModal = document.getElementById("detailModal");
+    const detailBackdrop = document.getElementById("detailBackdrop");
+    const detailPoster = document.getElementById("detailPoster");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailMatch = document.getElementById("detailMatch");
+    const detailYear = document.getElementById("detailYear");
+    const detailRating = document.getElementById("detailRating");
+    const detailType = document.getElementById("detailType");
+    const detailDescription = document.getElementById("detailDescription");
+    const detailPlay = document.getElementById("detailPlay");
+    const detailAdd = document.getElementById("detailAdd");
+    const detailLike = document.getElementById("detailLike");
+    const detailClose = document.getElementById("detailClose");
+    const episodesContainer = document.getElementById("episodesContainer");
+    
+    const videoModal = document.getElementById("videoModal");
+    const moviePlayer = document.getElementById("moviePlayer");
+    const videoClose = document.getElementById("videoClose");
+    
+    const playFeaturedBtn = document.getElementById("play-featured");
+    const infoFeaturedBtn = document.getElementById("info-featured");
+    
+    const messageModal = document.getElementById("messageModal");
+    const skipMessage = document.getElementById("skipMessage");
+    
+    const spinner = document.getElementById("spinner");
+
+    // Initialize app data from localStorage or create defaults
+    function initAppData() {
+      if (!localStorage.getItem('watchProgress')) {
+        localStorage.setItem('watchProgress', JSON.stringify({}));
+      }
+      
+      if (!localStorage.getItem('likedMovies')) {
+        localStorage.setItem('likedMovies', JSON.stringify({}));
+      }
+      
+      if (!localStorage.getItem('myList')) {
+        localStorage.setItem('myList', JSON.stringify([]));
+      }
+    }
+
+    // Storage functions
+    function saveWatchProgress(movieId, currentTime, episodeId = null) {
+      const progress = JSON.parse(localStorage.getItem('watchProgress'));
+      const key = episodeId ? `${movieId}-${episodeId}` : movieId;
+      
+      progress[key] = {
+        time: currentTime,
+        timestamp: Date.now(),
+        movie: movies.find(m => m.id == movieId),
+        episode: episodeId ? movies.find(m => m.id == movieId).episodes.find(e => e.id == episodeId) : null
+      };
+      
+      localStorage.setItem('watchProgress', JSON.stringify(progress));
+    }
+
+    function getWatchProgress() {
+      return JSON.parse(localStorage.getItem('watchProgress'));
+    }
+
+    function toggleLike(movieId) {
+      const likedMovies = JSON.parse(localStorage.getItem('likedMovies'));
+      likedMovies[movieId] = !likedMovies[movieId];
+      localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
+      updateLikeButton(movieId);
+      updateMyList();
+    }
+
+    function isLiked(movieId) {
+      const likedMovies = JSON.parse(localStorage.getItem('likedMovies'));
+      return likedMovies[movieId] || false;
+    }
+
+    function toggleMyList(movieId) {
+      const myList = JSON.parse(localStorage.getItem('myList'));
+      const index = myList.indexOf(movieId);
+      
+      if (index === -1) {
+        myList.push(movieId);
+        detailAdd.textContent = "✓ In My List";
+      } else {
+        myList.splice(index, 1);
+        detailAdd.textContent = "+ My List";
+      }
+      
+      localStorage.setItem('myList', JSON.stringify(myList));
+      updateMyList();
+    }
+
+    function isInMyList(movieId) {
+      const myList = JSON.parse(localStorage.getItem('myList'));
+      return myList.includes(movieId);
+    }
+
+    // Update UI functions
+    function updateLikeButton(movieId) {
+      if (isLiked(movieId)) {
+        detailLike.textContent = "👍 Liked";
+        detailLike.classList.add("liked");
+      } else {
+        detailLike.textContent = "👍 Like";
+        detailLike.classList.remove("liked");
+      }
+    }
+
+    function updateContinueWatchingRow() {
+      const progress = getWatchProgress();
+      const row = document.getElementById('continue-watching');
+      row.innerHTML = '';
+      
+      // Sort by most recent watch time
+      const sortedProgress = Object.entries(progress)
+        .sort((a, b) => b[1].timestamp - a[1].timestamp)
+        .slice(0, 10); // Show only 10 most recent
+      
+      sortedProgress.forEach(([key, data]) => {
+        const movie = data.movie;
+        if (movie) {
+          const isEpisode = data.episode !== null;
+          const progressPercent = Math.min((data.time / (isEpisode ? data.episode.duration : movie.duration)) * 100, 98);
+          
+          const item = document.createElement('div');
+          item.className = 'row-item';
+          item.innerHTML = `
+            <div class="type-badge ${movie.type === 'movie' ? 'type-movie' : 'type-show'}">
+              ${movie.type === 'movie' ? 'MOVIE' : 'SHOW'}
+            </div>
+            <img src="${movie.poster}" alt="${movie.title}" data-movie-id="${movie.id}" ${isEpisode ? `data-episode-id="${data.episode.id}"` : ''}>
+            <div class="item-info">
+              <div class="item-title">${isEpisode ? `${data.episode.title}` : movie.title}</div>
+              <div class="item-meta">
+                <span class="match">${movie.match}% Match</span>
+                <span>${movie.rating}</span>
+                <span>${movie.year}</span>
+                ${movie.type === 'show' ? `<span>${movie.seasons} Seasons</span>` : ''}
+              </div>
+            </div>
+            <div class="continue-progress">
+              <div class="continue-progress-bar" style="width: ${progressPercent}%"></div>
+            </div>
+          `;
+          row.appendChild(item);
+        }
+      });
+    }
+
+    function updateMyList() {
+      const myList = JSON.parse(localStorage.getItem('myList'));
+      const row = document.getElementById('my-list-row');
+      row.innerHTML = '';
+      
+      myList.forEach(movieId => {
+        const movie = movies.find(m => m.id == movieId);
+        if (movie) {
+          const item = document.createElement('div');
+          item.className = 'row-item';
+          item.innerHTML = `
+            <div class="type-badge ${movie.type === 'movie' ? 'type-movie' : 'type-show'}">
+              ${movie.type === 'movie' ? 'MOVIE' : 'SHOW'}
+            </div>
+            <img src="${movie.poster}" alt="${movie.title}" data-movie-id="${movie.id}">
+            <div class="item-info">
+              <div class="item-title">${movie.title}</div>
+              <div class="item-meta">
+                <span class="match">${movie.match}% Match</span>
+                <span>${movie.rating}</span>
+                <span>${movie.year}</span>
+                ${movie.type === 'show' ? `<span>${movie.seasons} Seasons</span>` : ''}
+              </div>
+            </div>
+          `;
+          row.appendChild(item);
+        }
+      });
+    }
+
+    // Create movie/show items for rows
+    function createRowItem(movie) {
+      const item = document.createElement('div');
+      item.className = 'row-item';
+      item.innerHTML = `
+        <div class="type-badge ${movie.type === 'movie' ? 'type-movie' : 'type-show'}">
+          ${movie.type === 'movie' ? 'MOVIE' : 'SHOW'}
+        </div>
+        <img src="${movie.poster}" alt="${movie.title}" data-movie-id="${movie.id}">
+        <div class="item-info">
+          <div class="item-title">${movie.title}</div>
+          <div class="item-meta">
+            <span class="match">${movie.match}% Match</span>
+            <span>${movie.rating}</span>
+            <span>${movie.year}</span>
+            ${movie.type === 'show' ? `<span>${movie.seasons} Seasons</span>` : ''}
+          </div>
+        </div>
+      `;
+      return item;
+    }
+
+    // Fill rows with appropriate content
+    function fillRows() {
+      // Trending (all content)
+      const trendingRow = document.getElementById('trending');
+      movies.forEach(movie => {
+        trendingRow.appendChild(createRowItem(movie));
+      });
+      
+      // Top Picks (mix of movies and shows)
+      const topPicksRow = document.getElementById('top-picks');
+      movies.filter(m => m.match > 90).forEach(movie => {
+        topPicksRow.appendChild(createRowItem(movie));
+      });
+      
+      // Popular (high match score)
+      const popularRow = document.getElementById('popular');
+      movies.filter(m => m.match > 85).forEach(movie => {
+        popularRow.appendChild(createRowItem(movie));
+      });
+      
+      // TV Shows
+      const tvShowsRow = document.getElementById('tv-shows-row');
+      movies.filter(m => m.type === 'show').forEach(movie => {
+        tvShowsRow.appendChild(createRowItem(movie));
+      });
+      
+      // Movies
+      const moviesRow = document.getElementById('movies-row');
+      movies.filter(m => m.type === 'movie').forEach(movie => {
+        moviesRow.appendChild(createRowItem(movie));
+      });
+      
+      // New Releases (recent years)
+      const newReleasesRow = document.getElementById('new-releases');
+      movies.filter(m => m.year >= 2015).forEach(movie => {
+        newReleasesRow.appendChild(createRowItem(movie));
+      });
+      
+      // Popular Releases
+      const popularReleasesRow = document.getElementById('popular-releases');
+      movies.filter(m => m.match > 88).forEach(movie => {
+        popularReleasesRow.appendChild(createRowItem(movie));
+      });
+    }
+
+    // Show detail modal for a movie or show
+    function showDetail(movieId) {
+      currentMovie = movies.find(m => m.id == movieId);
+      if (currentMovie) {
+        // Set modal content
+        detailBackdrop.style.backgroundImage = `url(${currentMovie.backdrop})`;
+        detailPoster.src = currentMovie.poster;
+        detailTitle.textContent = currentMovie.title;
+        detailMatch.textContent = `${currentMovie.match}% Match`;
+        detailYear.textContent = currentMovie.year;
+        detailRating.textContent = currentMovie.rating;
+        detailType.textContent = currentMovie.type === 'movie' ? 'MOVIE' : 'TV SHOW';
+        detailDescription.textContent = currentMovie.description;
+        
+        // Update buttons
+        updateLikeButton(currentMovie.id);
+        if (isInMyList(currentMovie.id)) {
+          detailAdd.textContent = "✓ In My List";
+        } else {
+          detailAdd.textContent = "+ My List";
+        }
+        
+        // Clear episodes container
+        episodesContainer.innerHTML = '';
+        
+        // If it's a show, populate episodes
+        if (currentMovie.type === 'show' && currentMovie.episodes) {
+          const episodesTitle = document.createElement('h3');
+          episodesTitle.className = 'episodes-title';
+          episodesTitle.textContent = 'Episodes';
+          episodesContainer.appendChild(episodesTitle);
+          
+          currentMovie.episodes.forEach((episode, index) => {
+            const episodeEl = document.createElement('div');
+            episodeEl.className = 'episode';
+            episodeEl.dataset.episodeId = episode.id;
+            episodeEl.innerHTML = `
+              <div class="episode-number">${index + 1}</div>
+              <img class="episode-thumbnail" src="${episode.thumbnail}" alt="${episode.title}">
+              <div class="episode-info">
+                <div class="episode-title">${episode.title}</div>
+                <p class="episode-description">${episode.description}</p>
+                <div class="episode-duration">${formatTime(episode.duration)}</div>
+              </div>
+            `;
+            episodesContainer.appendChild(episodeEl);
+          });
+        }
+        
+        // Show modal
+        detailModal.classList.add("active");
+      }
+    }
+
+    // Play movie or episode
+    function playContent(movieId, episodeId = null, startTime = 0) {
+      currentMovie = movies.find(m => m.id == movieId);
+      currentEpisode = episodeId ? currentMovie.episodes.find(e => e.id == episodeId) : null;
+      
+      if (currentMovie) {
+        showLoading(true);
+        
+        // Show message first
+        showMessage(() => {
+          // After message completes or is skipped, show the content
+          const videoUrl = currentEpisode ? currentEpisode.video || currentMovie.video : currentMovie.video;
+          moviePlayer.src = `${videoUrl}#t=${startTime}`;
+          
+          showLoading(false);
+          detailModal.classList.remove("active");
+          videoModal.classList.add("active");
+          
+          // Start tracking progress
+          startTrackingProgress();
+        });
+      }
+    }
+
+    function startTrackingProgress() {
+      // Clear any existing interval
+      if (currentTimeInterval) clearInterval(currentTimeInterval);
+      
+      // Save progress every 5 seconds
+      currentTimeInterval = setInterval(() => {
+        if (moviePlayer.currentTime && currentMovie) {
+          saveWatchProgress(
+            currentMovie.id, 
+            moviePlayer.currentTime,
+            currentEpisode ? currentEpisode.id : null
+          );
+        }
+      }, 5000);
+    }
+
+    // Show/hide loading spinner
+    function showLoading(show) {
+      if (show) {
+        spinner.classList.add("active");
+      } else {
+        spinner.classList.remove("active");
+      }
+    }
+
+    // Show message modal
+    function showMessage(callback) {
+      messageModal.classList.add("active");
+      
+      // Countdown for skip button
+      let seconds = 5;
+      skipMessage.textContent = `Skip (${seconds}s)`;
+      
+      const countdown = setInterval(() => {
+        seconds--;
+        skipMessage.textContent = `Skip (${seconds}s)`;
+        if (seconds <= 0) {
+          clearInterval(countdown);
+          skipMessage.textContent = "Skip";
+        }
+      }, 1000);
+      
+      // Skip button functionality
+      const skipHandler = () => {
+        clearInterval(countdown);
+        clearTimeout(messageTimeout);
+        messageModal.classList.remove("active");
+        callback();
+      };
+      
+      // Auto-close after 5 seconds
+      messageTimeout = setTimeout(() => {
+        clearInterval(countdown);
+        messageModal.classList.remove("active");
+        callback();
+      }, 5000);
+      
+      skipMessage.addEventListener("click", skipHandler, { once: true });
+    }
+
+    // Close modals
+    detailClose.addEventListener("click", () => {
+      detailModal.classList.remove("active");
+    });
+
+    videoClose.addEventListener("click", () => {
+      if (currentTimeInterval) clearInterval(currentTimeInterval);
+      if (currentMovie && moviePlayer.currentTime) {
+        saveWatchProgress(
+          currentMovie.id, 
+          moviePlayer.currentTime,
+          currentEpisode ? currentEpisode.id : null
+        );
+        updateContinueWatchingRow();
+      }
+      videoModal.classList.remove("active");
+      moviePlayer.src = "";
+    });
+
+    // Play button in detail modal
+    detailPlay.addEventListener("click", () => {
+      const progress = getWatchProgress();
+      const key = currentEpisode ? `${currentMovie.id}-${currentEpisode.id}` : currentMovie.id;
+      
+      if (progress[key] && progress[key].time > 60) { // More than 1 minute watched
+        if (confirm(`Continue watching from ${formatTime(progress[key].time)}?`)) {
+          playContent(currentMovie.id, currentEpisode?.id, progress[key].time);
+        } else {
+          playContent(currentMovie.id, currentEpisode?.id);
+        }
+      } else {
+        playContent(currentMovie.id, currentEpisode?.id);
+      }
+    });
+
+    // Add to list button
+    detailAdd.addEventListener("click", () => {
+      if (currentMovie) {
+        toggleMyList(currentMovie.id);
+      }
+    });
+
+    // Like button
+    detailLike.addEventListener("click", () => {
+      if (currentMovie) {
+        toggleLike(currentMovie.id);
+      }
+    });
+
+    // Play featured movie
+    playFeaturedBtn.addEventListener("click", () => {
+      playContent(1); // Play Jurassic Park
+    });
+
+    // Info button for featured movie
+    infoFeaturedBtn.addEventListener("click", () => {
+      showDetail(1); // Show Jurassic Park details
+    });
+
+    // Click on any movie poster to show details
+    document.addEventListener("click", (e) => {
+      if (e.target.tagName === "IMG" && e.target.dataset.movieId) {
+        const movieId = e.target.dataset.movieId;
+        const episodeId = e.target.dataset.episodeId;
+        
+        if (episodeId) {
+          // If clicking on an episode in continue watching
+          const movie = movies.find(m => m.id == movieId);
+          const episode = movie.episodes.find(e => e.id == episodeId);
+          currentMovie = movie;
+          currentEpisode = episode;
+          playContent(movieId, episodeId);
+        } else {
+          showDetail(movieId);
+        }
+      }
+    });
+
+    // Click on episode to play it
+    episodesContainer.addEventListener("click", (e) => {
+      const episodeEl = e.target.closest('.episode');
+      if (episodeEl) {
+        const episodeId = parseInt(episodeEl.dataset.episodeId);
+        playContent(currentMovie.id, episodeId);
+      }
+    });
+
+    // Format time as HH:MM:SS
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      
+      return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m ${secs}s`;
+    }
+
+    // Close modal when clicking outside
+    detailModal.addEventListener("click", (e) => {
+      if (e.target === detailModal) {
+        detailModal.classList.remove("active");
+      }
+    });
+
+    videoModal.addEventListener("click", (e) => {
+      if (e.target === videoModal) {
+        videoModal.classList.remove("active");
+        moviePlayer.src = "";
+      }
+    });
+
+    // Navbar scroll effect
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        document.querySelector(".navbar").classList.add("scrolled");
+      } else {
+        document.querySelector(".navbar").classList.remove("scrolled");
+      }
+    });
+
+    // Page switching logic
+    const navItems = document.querySelectorAll(".nav-links li");
+    
+    navItems.forEach(item => {
+      item.addEventListener("click", () => {
+        // Get the page ID from data attribute
+        const pageId = item.getAttribute("data-page");
+        
+        // Hide all pages
+        document.querySelectorAll(".page").forEach(page => {
+          page.classList.remove("active");
+        });
+        
+        // Show the selected page
+        document.getElementById(pageId).classList.add("active");
+        
+        // Update active nav item styling
+        navItems.forEach(navItem => {
+          navItem.style.color = navItem === item ? "#e50914" : "white";
+        });
+
+        // Update My List if needed
+        if (pageId === 'my-list') {
+          updateMyList();
+        }
+      });
+    });
+
+    // Initialize the app
+    function init() {
+      initAppData();
+      fillRows();
+      updateContinueWatchingRow();
+      updateMyList();
+      
+      // Set home as active by default
+      navItems[0].style.color = "#e50914";
+    }
+
+    // Start the app
+    init();
+  </script>
+</body>
+</html>
