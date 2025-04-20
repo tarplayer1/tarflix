@@ -10,6 +10,15 @@
   box-sizing: border-box;
 }
 
+@keyframes diceRoll {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.random-btn.loading {
+  animation: diceRoll 0.5s linear infinite;
+}
+
 body {
   margin: 0;
   background-color: #111;
@@ -818,6 +827,21 @@ body {
     width: 50px;
   }
 }
+.random-btn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 10px;
+  transition: transform 0.2s;
+}
+
+.random-btn:hover {
+  transform: scale(1.05);
+}
   </style>
 </head>
 <body>
@@ -825,6 +849,7 @@ body {
     <div class="logo">TARVISION</div>
     <nav>
       <ul class="nav-links">
+        <button id="randomMovieBtn" class="random-btn">🎲 Random Movie</button>
         <li data-page="home">Home</li>
         <li data-page="tv-shows">TV Shows</li>
         <li data-page="movies">Movies</li>
@@ -854,7 +879,6 @@ body {
   <main>
     <section class="page active" id="home">
       <div class="movie-row">
-        <h2>Continue Watching</h2>
         <div class="row-container">
           <button class="row-nav left" data-direction="left">◀</button>
           <div class="row-posters" id="continue-watching"></div>
@@ -1938,6 +1962,25 @@ body {
         row.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
       });
     });
+
+    // Function to pick a random movie/show
+function getRandomContent() {
+  const randomIndex = Math.floor(Math.random() * movies.length);
+  return movies[randomIndex];
+}
+
+document.getElementById('randomMovieBtn').addEventListener('click', () => {
+  const btn = document.getElementById('randomMovieBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    const randomContent = getRandomContent();
+    showDetail(randomContent.id);
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }, 1000); // Simulate "searching" for 1 second
+});
 
     // Start the app
     init();
