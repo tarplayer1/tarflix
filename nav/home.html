@@ -684,13 +684,7 @@ body {
   background-color: rgba(109,109,110,0.4);
 }
 
-.player-controls .save-progress {
-  background-color: #e50914;
-}
 
-.player-controls .save-progress:hover {
-  background-color: #f40612;
-}
 
 /* Message Modal */
 .message-modal {
@@ -1207,8 +1201,6 @@ body {
       <button class="video-close" id="videoClose">&times;</button>
       <iframe id="moviePlayer" allowfullscreen></iframe>
       <div class="player-controls">
-        <button id="saveProgressBtn" class="save-progress">💾 Save Progress</button>
-        <button id="resumeLaterBtn">⏸ Resume Later</button>
       </div>
     </div>
   </div>
@@ -1241,7 +1233,7 @@ body {
         description: "A 1993 science fiction film about a theme park populated with cloned dinosaurs on a remote island",
         poster: "../asset/jp.png",
         backdrop: "../asset/banner.png",
-        video: "http://dn720408.ca.archive.org/0/items/movies_20220526/Jurassic.Park.1993.720p.BrRip.264.YIFY.mp4",
+        video: "https://ia600404.us.archive.org/9/items/jurassic-park_202405/JURASSIC_PARK.mp4",
         duration: 7200, // 2 hours in seconds
         type: "movie",
         year: 1993,
@@ -1394,7 +1386,7 @@ body {
         title: "turning red",
         description: "growing up is a beast",
         poster: "https://www.movieposters.com/cdn/shop/products/turningred_480x.progressive.jpg?v=1638566906",
-        backdrop: "https://cdn-memphismomsnew.b-cdn.net/wp-content/uploads/2022/03/turning-red-pixar-movie-poster-1536x864.jpg",
+        backdrop: "https://images.squarespace-cdn.com/content/v1/54400c3de4b06a018e97259e/a477d8d8-0f79-489c-a74c-3c61801cc0c3/turning-red.jpg?format=1500w",
         video: "test.html",
         duration: 5220, // 1.45 hours
         type: "movie",
@@ -1404,6 +1396,81 @@ body {
         categories: ["Animation", "Comedy", "Fantasy", "Coming-of-Age", "Family", "Adventure"],
         seasons: null
       },
+  {
+    id: 12,
+    title: "Beauty and the Beast",
+    description: "A 1991 animated musical fantasy film about a prince transformed into a beast and the young woman who helps break the spell",
+    poster: "https://imgc.allpostersimages.com/img/posters/belle-and-the-beast_u-L-F1P7K50.jpg",
+    backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyLy581s9LzuQx9Ab5VlpoQ7ALzw8IDgbNBQ&s",
+    video: "https://ia802901.us.archive.org/6/items/schoolproject2_20200406/1991%20-%20Beauty%20and%20the%20Beast.mp4",
+    duration: 5040,
+    type: "movie",
+    year: 1991,
+    rating: "G",
+    match: 95,
+    categories: ["Animation", "Family", "Musical", "Fantasy"],
+    seasons: null
+  },
+  {
+    "id": 13,
+    "title": "Aladdin",
+    "description": "A 1992 animated musical fantasy film about a street urchin who finds a magic lamp containing a genie",
+    "poster": "https://imgc.allpostersimages.com/img/posters/aladdin-carpet-ride_u-L-F9DGVG0.jpg",
+    "backdrop": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbBCD8dtSXv0wK36MCaNy-mMHwjihpvr5V5A&s",
+    "video": "https://dn720001.ca.archive.org/0/items/hexziasmovies/Aladdin.mp4",
+    "duration": 5400,
+    "type": "movie",
+    "year": 1992,
+    "rating": "G",
+    "match": 94,
+    "categories": ["Animation", "Family", "Musical", "Fantasy"],
+    "seasons": null
+  },
+  {
+    "id": 14,
+    "title": "The Lion King",
+    "description": "A 1994 animated musical drama film about a young lion prince's journey to reclaim his throne",
+    "poster": "https://imgc.allpostersimages.com/img/posters/trends-international-disney-the-lion-king-1994-pride-rock_u-L-FAAQ6T0.jpg",
+    "backdrop": "https://www.marylandzoo.org/wp-content/uploads/2022/06/TheLionKingMoviePoster.jpg",
+    "video": "https://dn720403.ca.archive.org/0/items/schoolproject2_20200406/1994%20-%20The%20Lion%20King.mp4",
+    "duration": 5280,
+    "type": "movie",
+    "year": 1994,
+    "rating": "G",
+    "match": 97,
+    "categories": ["Animation", "Family", "Musical", "Drama"],
+    "seasons": null
+  },
+  {
+    id: 15,
+    title: "THe notebook",
+    description: "A 1997 epic romance and disaster film about the ill-fated maiden voyage of the RMS Titanic",
+    poster: "https://i.ebayimg.com/images/g/D9UAAOSwFw1k4XSB/s-l1600.webp",
+    backdrop: "https://beaumonteventstx.com/wp-content/uploads/2025/01/The-notebook-banner.jpeg",
+    video: "test2.html",
+    duration: 11340,
+    type: "movie",
+    year: 1997,
+    rating: "PG-13",
+    match: 95,
+    categories: ["Drama", "Romance", "Disaster"],
+    seasons: null
+  },
+  {
+    id: 16,
+    title: "THe notebook",
+    description: "In 1980 Miami, a determined Cuban immigrant takes over a drug cartel and succumbs to greed.",
+    poster: "https://www.posterist.net/cdn/shop/files/scarface-movie-poster-01.jpg?v=1698405018&width=540",
+    backdrop: "https://images.photowall.com/interiors/59640/landscape/poster/room25.jpg?w=1440&q=80",
+    video: "https://dn720308.ca.archive.org/0/items/scarface_202111/Scarface.ia.mp4",
+    duration: 11340,
+    type: "movie",
+    year: 1997,
+    rating: "R",
+    match: 93,
+    categories: ["Crime", "Drama"],
+    seasons: null
+  },
     ];
 
     // Current movie and tracking variables
@@ -1433,8 +1500,6 @@ body {
     const videoModal = document.getElementById("videoModal");
     const moviePlayer = document.getElementById("moviePlayer");
     const videoClose = document.getElementById("videoClose");
-    const saveProgressBtn = document.getElementById("saveProgressBtn");
-    const resumeLaterBtn = document.getElementById("resumeLaterBtn");
     
     const playFeaturedBtn = document.getElementById("play-featured");
     const infoFeaturedBtn = document.getElementById("info-featured");
@@ -1860,29 +1925,9 @@ body {
       return `${hrs > 0 ? hrs + 'h ' : ''}${mins > 0 ? mins + 'm ' : ''}${secs}s`;
     }
 
-    // Save progress when button is clicked
-    saveProgressBtn.addEventListener('click', () => {
-      if (currentMovie && moviePlayer.currentTime) {
-        saveWatchProgress(
-          currentMovie.id, 
-          moviePlayer.currentTime,
-          currentEpisode ? currentEpisode.id : null
-        );
-      }
-    });
 
-    // Resume later button
-    resumeLaterBtn.addEventListener('click', () => {
-      if (currentMovie && moviePlayer.currentTime) {
-        saveWatchProgress(
-          currentMovie.id, 
-          moviePlayer.currentTime,
-          currentEpisode ? currentEpisode.id : null
-        );
-        videoModal.classList.remove("active");
-        moviePlayer.src = "";
-      }
-    });
+
+
 
     // Close modals
     detailClose.addEventListener("click", () => {
