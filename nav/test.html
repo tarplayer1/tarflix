@@ -1,54 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sync Video and Audio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sync Video and Audio (Auto)</title>
 </head>
 <body>
 
-  <video id="myVideo" width="600" controls preload="auto">
+  <video id="myVideo" width="600" controls preload="auto" muted>
     <source src="https://ia802207.us.archive.org/26/items/ag17bkq3rvn_202204/ag17bKQ3rvN.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-  <audio id="myAudio" autoplay loop preload="auto" style="display:none;">
+  <audio id="myAudio" preload="auto" style="display:none;">
     <source src="https://ia800400.us.archive.org/1/items/turningred2022movie-dubcollection/Turning%20Red%20%28Audio%20Original%29.mp3" type="audio/mp3">
     Your browser does not support the audio element.
   </audio>
 
   <script>
-    // Get the video and audio elements
     const video = document.getElementById('myVideo');
     const audio = document.getElementById('myAudio');
 
-    // Mute the video
+    // Video is muted so browsers allow autoplay
     video.muted = true;
 
-    // Play both video and audio when the page loads
-    video.play();
-    audio.play();
-
-    // Sync the audio with the video when the video time changes
-    video.addEventListener('timeupdate', function() {
-      audio.currentTime = video.currentTime;
+    window.addEventListener('load', () => {
+      video.play().catch(err => console.log("Video play error:", err));
+      audio.play().catch(err => console.log("Audio play error:", err));
     });
 
-    // Pause the audio when the video is paused
-    video.addEventListener('pause', function() {
-      audio.pause();
+    video.addEventListener('canplay', () => {
+      if (audio.paused) {
+        audio.play().catch(err => console.log("Audio play error:", err));
+      }
     });
 
-    // Play the audio when the video is played
-    video.addEventListener('play', function() {
-      audio.play();
+    video.addEventListener('timeupdate', () => {
+      const diff = Math.abs(audio.currentTime - video.currentTime);
+      if (diff > 0.3 && !audio.seeking) {
+        audio.currentTime = video.currentTime;
+      }
     });
 
-    // Stop the audio when the video ends
-    video.addEventListener('ended', function() {
-      audio.pause();
-    });
-
+    video.addEventListener('pause', () => audio.pause());
+    video.addEventListener('play', () => audio.play());
+    video.addEventListener('ended', () => audio.pause());
   </script>
 
 </body>
