@@ -893,7 +893,6 @@ body {
   transform: scale(1.05);
 }
   </style>
-  <link rel="shortcut icon" type="image/x-icon" href="../asset/tv.png" />
 </head>
 <body>
   <header class="navbar">
@@ -937,7 +936,7 @@ body {
         </div>
       </div>
       <div class="movie-row">
-        <h2>Trending Now</h2>
+        <h2>all</h2>
         <div class="row-container">
           <button class="row-nav left" data-direction="left">◀</button>
           <div class="row-posters" id="trending"></div>
@@ -982,6 +981,15 @@ body {
         <div class="row-container">
           <button class="row-nav left" data-direction="left">◀</button>
           <div class="row-posters" id="action"></div>
+          <button class="row-nav right" data-direction="right">▶</button>
+        </div>
+      </div>
+
+      <div class="movie-row">
+        <h2>spanish</h2>
+        <div class="row-container">
+          <button class="row-nav left" data-direction="left">◀</button>
+          <div class="row-posters" id="spanish"></div>
           <button class="row-nav right" data-direction="right">▶</button>
         </div>
       </div>
@@ -1140,30 +1148,6 @@ body {
       </div>
     </section>
 
-  <div class="footer">
-    <div class="footer-links">
-      <div>
-        <a href="#">Investor Relations</a><br>
-        <a href="jobs.html">Jobs</a><br>
-        <a href="#">Terms of Use</a><br>
-        <a href="#">Corporate Information</a>
-      </div>
-      <div>
-        <a href="#">Privacy</a><br>
-        <a href="#">Legal Notices</a><br>
-        <a href="#">Cookie Preferences</a>
-      </div>
-      <div>
-        <a href="#">Contact Us</a><br>
-        <a href="#">Speed Test</a><br>
-        <a href="#">Only on TarVision</a>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <p>© 2025 TarVision, Inc.</p>
-    </div>
-  </div>
-
   <!-- Detail Modal -->
   <div class="detail-modal" id="detailModal">
     <div class="detail-container">
@@ -1235,7 +1219,6 @@ body {
         poster: "../asset/jp.png",
         backdrop: "../asset/banner.png",
         video: "https://ia600404.us.archive.org/9/items/jurassic-park_202405/JURASSIC_PARK.mp4",
-        duration: 7200, // 2 hours in seconds
         type: "movie",
         year: 1993,
         rating: "PG-13",
@@ -1250,7 +1233,6 @@ body {
         poster: "../asset/st.png",
         backdrop: "../asset/st-backdrop.png",
         video: "https://ia803108.us.archive.org/13/items/dvdmenu_spongebob_first100episodes/bandicam%202019-07-20%2021-07-43-408.mp4",
-        duration: 3600,
         type: "show",
         year: 1999,
         rating: "TV-Y7",
@@ -1262,7 +1244,6 @@ body {
             id: 201,
             title: "Help Wanted / Reef Blower / Tea at the Treedome",
             description: "SpongeBob gets a job at the Krusty Krab, shows off his reef blowing skills, and meets Sandy Cheeks.",
-            duration: 1429,
             thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
             video: "https://ia804603.us.archive.org/12/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%201%20Help%20Wanted%20%E2%80%93%20Reef%20Blower%20%E2%80%93%20Tea%20at%20the%20Treedome%20-%20SpongeBob%20SquarePants.mp4"
           },
@@ -1270,7 +1251,6 @@ body {
             id: 202,
             title: "Ripped Pants / Bubblestand",
             description: "SpongeBob rips his pants to get attention, then opens a bubble-blowing stand.",
-            duration: 1380,
             thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
             video: "https://dn721600.ca.archive.org/0/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%202%20%20%E2%80%93%20Ripped%20Pants%20-%20SpongeBob%20SquarePants.mp4"
           },
@@ -1278,7 +1258,6 @@ body {
             id: 203,
             title: "Jellyfishing / Plankton!",
             description: "SpongeBob and Patrick go jellyfishing, and Plankton tries to steal the Krabby Patty formula.",
-            duration: 1410,
             thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
             video: "https://dn721600.ca.archive.org/0/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%203%20Jellyfishing%20-%20SpongeBob%20SquarePants.mp4"
           },
@@ -1286,7 +1265,6 @@ body {
             id: 204,
             title: "Naughty Nautical Neighbors / Boating School",
             description: "SpongeBob and Patrick become enemies then friends, and SpongeBob struggles with boating school.",
-            duration: 1395,
             thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXoUoAus5ZffLQx3h4Bi-hmISFhYnSlgjCKw&s",
             video: "https://dn721600.ca.archive.org/0/items/please-stand-by-video-effect_202409/SpongeBob%20SquarePants%20Season%201%20Episode%204%20Naughty%20Nautical%20Neighbors%20%E2%80%93%20Boating%20School%20-%20SpongeBob%20SquarePants.mp4"
           }
@@ -1299,7 +1277,6 @@ body {
         poster: "../asset/ig.png",
         backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEL5sdZUBPx1XwtoDfijLpQaRuPPrWgMr6lg&s",
         video: "https://dn721601.ca.archive.org/0/items/the-iron-giant_202402/TheIronGiant.mp4",
-        duration: 5160, // 1.43 hours
         type: "movie",
         year: 1999,
         rating: "PG",
@@ -1314,7 +1291,6 @@ body {
         poster: "../asset/lb.png",
         backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR34BYW7pry5S_RmnvhPuuWwpwCi4XMiJAUaQ&s",
         video: "https://dn721908.ca.archive.org/0/items/aqq_20240331/aqq.mp4",
-        duration: 6240, // 1.73 hours
         type: "movie",
         year: 2017,
         rating: "PG",
@@ -1329,7 +1305,6 @@ body {
         poster: "../asset/cna.png",
         backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe0JPGCTYWiHrOq3cCKkYcaEKZBZbU4QfGUw&s",
         video: "https://ia802304.us.archive.org/14/items/hexziasmovies/The%20Croods%20A%20New%20Age.mp4",
-        duration: 5580, // 1.55 hours
         type: "movie",
         year: 2020,
         rating: "PG",
@@ -1344,7 +1319,6 @@ body {
         poster: "../asset/p.png",
         backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2BEDVdXaJwYnEC-vKwniwC-0ROD21cgnvog&s",
         video: "https://dn720405.ca.archive.org/0/items/1080-2_202204/1080%20%282%29.mp4",
-        duration: 5460, // 1.52 hours
         type: "movie",
         year: 1998,
         rating: "PG",
@@ -1359,7 +1333,6 @@ body {
         poster: "../asset/sbm.png",
         backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuIV2mYNmYw2KxHCODd4Kvu-GmLSDZ2BwJSQ&s",
         video: "https://dn721803.ca.archive.org/0/items/the-sponge-bob-square-pants-movie_202206/The%20SpongeBob%20SquarePants%20Movie.mp4",
-        duration: 5220, // 1.45 hours
         type: "movie",
         year: 2004,
         rating: "PG",
@@ -1369,17 +1342,16 @@ body {
       },
       {
         id: 10,
-        title: "Mario Movie",
+        title: "Mario Movie spanish",
         description: "A plumber's adventure in the Mushroom Kingdom",
         poster: "../asset/sm.png",
         backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp2X45DAJ87t0FA0-Qdxw9ukw7r34LZg-tYg&s",
         video: "https://dn720304.ca.archive.org/0/items/super.-mario.-bros.-2023.-full-1080-p-dual-lat/Super.Mario.Bros.2023.FULL1080P-Dual-Lat.mp4",
-        duration: 5220, // 1.45 hours
         type: "movie",
         year: 2023,
         rating: "PG",
         match: 95,
-        categories: ["Animation", "Adventure", "Comedy", "Family"],
+        categories: ["Animation", "Adventure", "Comedy", "Family", "Spanish"],
         seasons: null
       },
       {
@@ -1389,7 +1361,6 @@ body {
         poster: "https://www.movieposters.com/cdn/shop/products/turningred_480x.progressive.jpg?v=1638566906",
         backdrop: "https://images.squarespace-cdn.com/content/v1/54400c3de4b06a018e97259e/a477d8d8-0f79-489c-a74c-3c61801cc0c3/turning-red.jpg?format=1500w",
         video: "test.html",
-        duration: 5220, // 1.45 hours
         type: "movie",
         year: 2022,
         rating: "PG",
@@ -1404,7 +1375,6 @@ body {
     poster: "https://imgc.allpostersimages.com/img/posters/belle-and-the-beast_u-L-F1P7K50.jpg",
     backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyLy581s9LzuQx9Ab5VlpoQ7ALzw8IDgbNBQ&s",
     video: "https://ia802901.us.archive.org/6/items/schoolproject2_20200406/1991%20-%20Beauty%20and%20the%20Beast.mp4",
-    duration: 5040,
     type: "movie",
     year: 1991,
     rating: "G",
@@ -1419,7 +1389,6 @@ body {
     "poster": "https://imgc.allpostersimages.com/img/posters/aladdin-carpet-ride_u-L-F9DGVG0.jpg",
     "backdrop": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbBCD8dtSXv0wK36MCaNy-mMHwjihpvr5V5A&s",
     "video": "https://dn720001.ca.archive.org/0/items/hexziasmovies/Aladdin.mp4",
-    "duration": 5400,
     "type": "movie",
     "year": 1992,
     "rating": "G",
@@ -1434,7 +1403,6 @@ body {
     "poster": "https://imgc.allpostersimages.com/img/posters/trends-international-disney-the-lion-king-1994-pride-rock_u-L-FAAQ6T0.jpg",
     "backdrop": "https://www.marylandzoo.org/wp-content/uploads/2022/06/TheLionKingMoviePoster.jpg",
     "video": "https://dn720403.ca.archive.org/0/items/schoolproject2_20200406/1994%20-%20The%20Lion%20King.mp4",
-    "duration": 5280,
     "type": "movie",
     "year": 1994,
     "rating": "G",
@@ -1444,7 +1412,7 @@ body {
   },
   {
     id: 15,
-    title: "THe notebook",
+    title: "The notebook",
     description: "A 1997 epic romance and disaster film about the ill-fated maiden voyage of the RMS Titanic",
     poster: "https://i.ebayimg.com/images/g/D9UAAOSwFw1k4XSB/s-l1600.webp",
     backdrop: "https://beaumonteventstx.com/wp-content/uploads/2025/01/The-notebook-banner.jpeg",
@@ -1464,7 +1432,6 @@ body {
     poster: "https://www.posterist.net/cdn/shop/files/scarface-movie-poster-01.jpg?v=1698405018&width=540",
     backdrop: "https://images.photowall.com/interiors/59640/landscape/poster/room25.jpg?w=1440&q=80",
     video: "https://dn720308.ca.archive.org/0/items/scarface_202111/Scarface.ia.mp4",
-    duration: 11340,
     type: "movie",
     year: 1997,
     rating: "R",
@@ -1472,6 +1439,63 @@ body {
     categories: ["Crime", "Drama"],
     seasons: null
   },
+  {
+    id: 17,
+    title: "Spiderman movie",
+    description: "follows shy teenager Peter Parker as he gains spider-like abilities after being bitten by a genetically modified spider",
+    poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqy1jEP-eyU90LvN32tw_s8NByFfRUBh40zg&s",
+    backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShhM4nFixULRVcLMn7VPuO27vtv1aUutbqkA&s",
+    video: "https://dn720406.ca.archive.org/0/items/spider-man-12-full-screen/Spider-Man%20Full-Screen.mp4",
+    type: "movie",
+    year: 1997,
+    rating: "PG-13",
+    match: 67,
+    categories: ["Crime", "Drama"],
+    seasons: null
+  },
+  {
+        id: 18,
+        title: "Mario Movie",
+        description: "A plumber's adventure in the Mushroom Kingdom",
+        poster: "../asset/sm.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp2X45DAJ87t0FA0-Qdxw9ukw7r34LZg-tYg&s",
+        video: "https://dn720302.ca.archive.org/0/items/thesupermariobrosmovie2023/Fuck%20it%2C%20Mario%20Movie.webm",
+        type: "movie",
+        year: 2023,
+        rating: "PG",
+        match: 95,
+        categories: ["Animation", "Adventure", "Comedy", "Family", ],
+        seasons: null
+      },
+      {
+        id: 19,
+        title: "paulie spanish",
+        description: "A talking parrot's incredible journey to find his original owner",
+        poster: "../asset/p.png",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2BEDVdXaJwYnEC-vKwniwC-0ROD21cgnvog&s",
+        video: "https://ia801008.us.archive.org/26/items/paulie_201907/Paulie.mp4",
+        type: "movie",
+        year: 1998,
+        rating: "PG",
+        match: 85,
+        categories: ["Comedy", "Family", "Spanish"],
+        seasons: null
+      },
+      {
+        id: 20,
+        title: "when the wind blows",
+        description: "A movie about a atomic attack",
+        poster: "https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/When_the_Wind_Blows_1986.jpeg/250px-When_the_Wind_Blows_1986.jpeg",
+        backdrop: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfIPX42Lorwf0SPvmqr4UPYiug2_sbzXvEwQ&s",
+        video: "https://ia800508.us.archive.org/3/items/when-the-wind-blows-1986/When%20the%20Wind%20Blows.ia.mp4",
+        type: "movie",
+        year: 1986,
+        rating: "PG-13",
+        match: 88,
+        categories: ["Animation", "Drama", "War"],
+        seasons: null
+      },
+
     ];
 
     // Current movie and tracking variables
@@ -1740,7 +1764,8 @@ body {
     'science-fiction': ["Science Fiction"],
     'thriller': ["Thriller"],
     'war': ["War"],
-    'western': ["Western"]
+    'western': ["Western"],
+    'spanish': ["Spanish"]
   };
   
   // Populate each category row
