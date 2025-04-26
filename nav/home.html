@@ -116,7 +116,6 @@ body {
 
 /* Banner */
 .banner {
-  background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.8) 100%), url("../asset/banner.png");
   background-size: cover;
   background-position: center center;
   height: 70vh;
@@ -271,11 +270,11 @@ body {
 }
 
 .row-item img {
-  width: auto;  /* Remove fixed width */
-  height: 250px; /* Keep height consistent */
-  object-fit: contain; /* Change from 'cover' to 'contain' */
+  width: auto;
+  height: 250px;
+  object-fit: contain;
   border-radius: 10px;
-  background-color: #000; /* Add background for letterboxing */
+  background-color: #000;
 }
 
 .item-info {
@@ -684,8 +683,6 @@ body {
   background-color: rgba(109,109,110,0.4);
 }
 
-
-
 /* Message Modal */
 .message-modal {
   display: none;
@@ -877,6 +874,7 @@ body {
     font-size: 12px;
   }
 }
+
 .random-btn {
   background-color: #e50914;
   color: white;
@@ -917,8 +915,8 @@ body {
 
   <section class="banner">
     <div class="banner-content">
-      <h1>Jurassic Park</h1>
-      <p>A 1993 science fiction film about a theme park populated with cloned dinosaurs on a remote island</p>
+      <h1>Loading...</h1>
+      <p>Loading featured content...</p>
       <div class="banner-buttons">
         <button class="play-btn" id="play-featured">▶ Play</button>
         <button class="info-btn" id="info-featured">ℹ More Info</button>
@@ -929,6 +927,15 @@ body {
   <main>
     <section class="page active" id="home">
       <div class="movie-row">
+        <h2>Top Picks For You</h2>
+        <div class="row-container">
+          <button class="row-nav left" data-direction="left">◀</button>
+          <div class="row-posters" id="top-picks"></div>
+          <button class="row-nav right" data-direction="right">▶</button>
+        </div>
+      </div>
+      <div class="movie-row">
+        <h2>Continue Watching</h2>
         <div class="row-container">
           <button class="row-nav left" data-direction="left">◀</button>
           <div class="row-posters" id="continue-watching"></div>
@@ -936,18 +943,10 @@ body {
         </div>
       </div>
       <div class="movie-row">
-        <h2>all</h2>
+        <h2>Trending Now</h2>
         <div class="row-container">
           <button class="row-nav left" data-direction="left">◀</button>
           <div class="row-posters" id="trending"></div>
-          <button class="row-nav right" data-direction="right">▶</button>
-        </div>
-      </div>
-      <div class="movie-row">
-        <h2>Top Picks For You</h2>
-        <div class="row-container">
-          <button class="row-nav left" data-direction="left">◀</button>
-          <div class="row-posters" id="top-picks"></div>
           <button class="row-nav right" data-direction="right">▶</button>
         </div>
       </div>
@@ -1720,18 +1719,45 @@ body {
       return item;
     }
 
+    // Function to get random movies
+    function getRandomMovies(count) {
+      const shuffled = [...movies].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+
+    // Function to set random featured movie
+    function setRandomFeaturedMovie() {
+      const featured = getRandomMovies(1)[0];
+      const banner = document.querySelector('.banner');
+      const bannerContent = document.querySelector('.banner-content');
+      
+      banner.style.backgroundImage = `linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.8) 100%), url("${featured.backdrop}")`;
+      bannerContent.querySelector('h1').textContent = featured.title;
+      bannerContent.querySelector('p').textContent = featured.description;
+      
+      // Update play and info buttons to work with this movie
+      const playBtn = document.getElementById('play-featured');
+      const infoBtn = document.getElementById('info-featured');
+      
+      playBtn.onclick = () => playContent(featured.id);
+      infoBtn.onclick = () => showDetail(featured.id);
+    }
+
     // Fill rows with appropriate content
     function fillRows() {
+      // Top Picks - 3 random movies
+      const topPicksRow = document.getElementById('top-picks');
+      getRandomMovies(3).forEach(movie => {
+        topPicksRow.appendChild(createRowItem(movie));
+      });
+
+      // Set random featured movie in banner
+      setRandomFeaturedMovie();
+      
       // Trending (all content)
       const trendingRow = document.getElementById('trending');
       movies.forEach(movie => {
         trendingRow.appendChild(createRowItem(movie));
-      });
-      
-      // Top Picks (mix of movies and shows)
-      const topPicksRow = document.getElementById('top-picks');
-      movies.filter(m => m.match > 90).forEach(movie => {
-        topPicksRow.appendChild(createRowItem(movie));
       });
       
       // TV Shows
@@ -1747,42 +1773,39 @@ body {
       });
       
       const categoryRows = {
-    'action': ["Action"],
-    'adventure': ["Adventure"],
-    'animation': ["Animation"],
-    'comedy': ["Comedy"],
-    'crime': ["Crime"],
-    'documentary': ["Documentary"],
-    'drama': ["Drama"],
-    'family': ["Family"],
-    'fantasy': ["Fantasy"],
-    'history': ["History"],
-    'horror': ["Horror"],
-    'music': ["Music"],
-    'mystery': ["Mystery"],
-    'romance': ["Romance"],
-    'science-fiction': ["Science Fiction"],
-    'thriller': ["Thriller"],
-    'war': ["War"],
-    'western': ["Western"],
-    'spanish': ["Spanish"]
-  };
-  
-  // Populate each category row
-  Object.entries(categoryRows).forEach(([rowId, categories]) => {
-    const row = document.getElementById(rowId);
-    if (row) {
-      movies.filter(movie => 
-        movie.categories.some(cat => categories.includes(cat))
-      ).forEach(movie => {
-        row.appendChild(createRowItem(movie));
+        'action': ["Action"],
+        'adventure': ["Adventure"],
+        'animation': ["Animation"],
+        'comedy': ["Comedy"],
+        'crime': ["Crime"],
+        'documentary': ["Documentary"],
+        'drama': ["Drama"],
+        'family': ["Family"],
+        'fantasy': ["Fantasy"],
+        'history': ["History"],
+        'horror': ["Horror"],
+        'music': ["Music"],
+        'mystery': ["Mystery"],
+        'romance': ["Romance"],
+        'science-fiction': ["Science Fiction"],
+        'thriller': ["Thriller"],
+        'war': ["War"],
+        'western': ["Western"],
+        'spanish': ["Spanish"]
+      };
+      
+      // Populate each category row
+      Object.entries(categoryRows).forEach(([rowId, categories]) => {
+        const row = document.getElementById(rowId);
+        if (row) {
+          movies.filter(movie => 
+            movie.categories.some(cat => categories.includes(cat))
+          ).forEach(movie => {
+            row.appendChild(createRowItem(movie));
+          });
+        }
       });
     }
-  });
-}
-
-
-
 
     function showSearchResults(results) {
       searchResultsGrid.innerHTML = '';
@@ -1951,10 +1974,6 @@ body {
       return `${hrs > 0 ? hrs + 'h ' : ''}${mins > 0 ? mins + 'm ' : ''}${secs}s`;
     }
 
-
-
-
-
     // Close modals
     detailClose.addEventListener("click", () => {
       detailModal.classList.remove("active");
@@ -2000,16 +2019,6 @@ body {
       if (currentMovie) {
         toggleLike(currentMovie.id);
       }
-    });
-
-    // Play featured movie
-    playFeaturedBtn.addEventListener("click", () => {
-      playContent(1); // Play Jurassic Park
-    });
-
-    // Info button for featured movie
-    infoFeaturedBtn.addEventListener("click", () => {
-      showDetail(1); // Show Jurassic Park details
     });
 
     // Click on any movie poster to show details
@@ -2160,13 +2169,6 @@ body {
         btn.disabled = false;
       }, 1000); // Simulate "searching" for 1 second
     });
-
-    const allCategories = [
-  "Action", "Adventure", "Animation", "Comedy", "Crime", 
-  "Documentary", "Drama", "Family", "Fantasy", "History",
-  "Horror", "Music", "Mystery", "Romance", "Science Fiction",
-  "Thriller", "War", "Western"
-];
 
     // Start the app
     init();
